@@ -64,7 +64,14 @@ void checkButtonLeft() {
   //    Check button Left Button)
   //  ==================
   //leftchange = false;
-  buttonLeft_state = digitalRead(buttonLeft);
+  if(GlobalUpsideDownFlag == true)
+  {
+    buttonLeft_state = digitalRead(buttonRight);
+  }
+  else
+  {
+    buttonLeft_state = digitalRead(buttonLeft);
+  }
   // compare the buttonState to its previous state
   if (buttonLeft_state != buttonLeft_lastState) {
     if (buttonLeft_state == LOW) {  // if the state has changed, increment the counter
@@ -83,7 +90,14 @@ void checkButtonRight() {
   //    Check button Right Button)
   //  ==================
   //rightchange = false;
-  buttonRight_state = digitalRead(buttonRight);
+  if(GlobalUpsideDownFlag == true)
+  {
+    buttonRight_state = digitalRead(buttonLeft);
+  }
+  else
+  {
+    buttonRight_state = digitalRead(buttonRight);
+  }
   // compare the buttonState to its previous state
   if (buttonRight_state != buttonRight_lastState) {
     if (buttonRight_state == LOW) {  // if the state has changed, increment the counter

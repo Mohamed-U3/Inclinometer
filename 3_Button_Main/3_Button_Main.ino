@@ -61,6 +61,7 @@ int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
 int minVal = 265;
 int maxVal = 402;
 double z = 0;
+bool GlobalUpsideDownFlag = false;
 int xAng, yAng;
 const int MPU_addr = 0x68;
 
@@ -172,11 +173,15 @@ void setup() {
   //power.setTimeout(autoPowerOffTime);
 }
 
-void loop() {
+void loop()
+{
+  checkMPU(); // checks the angle and control the rotation of screen and buttons.
+  
   if (flag == 1) {  //checks if flag == 1 from the checkPage func
     //Timer1.stop();  //stop the interrupt
     mainMenu();     //goes to menu 1, change brightness first
     flag = 0;       //so flag works fresh the next time
+    checkMPU(); // checks the angle and control the rotation of screen.
     //Timer1.restart();
   }
   checkPage();

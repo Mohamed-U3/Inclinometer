@@ -345,3 +345,57 @@ void checkPage() {
   }
   
 }
+
+void checkMPU()
+{
+  if (!mpu.begin())
+  {
+    display.println(F("Error in MPU6050"));  // set info
+    display.display();
+  }
+  else
+  {
+    //start 10 second counter to set angle
+    startt = millis();
+    endt = 0;
+    duration = 50;  //50 ms
+    Wire.beginTransmission(MPU_addr);
+    Wire.write(0x6B);
+    Wire.write(0);
+    Wire.endTransmission(true);
+    int value = 0;
+    while ((endt - startt) <= duration)
+    {
+      Wire.beginTransmission(MPU_addr);
+      Wire.write(0x3B);
+      Wire.endTransmission(false);
+      Wire.requestFrom(MPU_addr, 14, true);
+      AcX = Wire.read() << 8 | Wire.read();
+      AcY = Wire.read() << 8 | Wire.read();
+      xAng = map(AcX, minVal, maxVal, -90, 90);
+      yAng = map(AcY, minVal, maxVal, -90, 90);
+      z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
+      if (z > 180) {
+        z = z - 360;
+      }
+      Serial.print(F("Current angle: "));
+      //Serial.print("Numerical value:" + z);
+      z = z - 90;
+      value = round(z);
+      value = abs(value);
+      
+      endt = millis();
+    }
+
+    if(value> 180)
+    {
+      display.setRotation(2); //rotates text on OLED 1=90 degrees, 2=180 degrees
+      GlobalUpsideDownFlag = true;
+    }
+    else
+    {
+      display.setRotation(0); //rotates text on OLED 1=90 degrees, 2=180 degrees
+      GlobalUpsideDownFlag = false;
+    }
+  }
+}
