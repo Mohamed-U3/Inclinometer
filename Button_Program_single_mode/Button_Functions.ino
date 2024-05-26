@@ -64,7 +64,7 @@ void checkButtonLeft() {
   //    Check button Left Button)
   //  ==================
   //leftchange = false;
-  if(GlobalUpsideDownFlag == true)
+    if(GlobalUpsideDownFlag == true)
   {
     buttonLeft_state = digitalRead(buttonRight);
   }

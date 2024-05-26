@@ -5,7 +5,7 @@
 //NOTE: for any power or auto power on code, check "1_Button_Program_Test_v3.ino" file
 
 String codeTitle = ("3D Archery LED");
-String codeVersion = ("V3.0");  // Update this number when changes are made.
+String codeVersion = ("PROTO V37 SM");  // Update this number when changes are made.
                                            // Number will be displayed on start up screen.
 
 //bool printToSerialMonitor = false;  // Print debug info to serial monitor?
@@ -20,7 +20,7 @@ String codeVersion = ("V3.0");  // Update this number when changes are made.
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
 #include <EEPROM.h>
-#include "MAX17043.h"  // for batteries >> I2C protocal
+#include "MAX17043.h"
 //#include <TimerOne.h>
 //https://github.com/PaulStoffregen/TimerOne/blob/master/examples/Interrupt/Interrupt.ino
 
@@ -81,8 +81,8 @@ bool powersetup = true;
 
 int flash = 0;
 
-int menuPageCounter = 0;
-int menuNum = 0;
+int menuPageCounter = 1;
+int menuNum = 1;
 boolean startpage = true;
 int subMenuCounter = 1;
 //bool breakMenuLoop = false;
@@ -173,15 +173,15 @@ void setup() {
   //power.setTimeout(autoPowerOffTime);
 }
 
-void loop()
+void loop() 
 {
-  checkMPU(); // checks the angle and control the rotation of screen and buttons.
-  
-  if (flag == 1) {  //checks if flag == 1 from the checkPage func
+  checkMPU();         // checks the angle and control the rotation of screen and buttons.
+  if (flag == 1)//checks if flag == 1 from the checkPage func
+  {
+    checkMPU();       // checks the angle and control the rotation of screen and buttons.
     //Timer1.stop();  //stop the interrupt
     mainMenu();     //goes to menu 1, change brightness first
     flag = 0;       //so flag works fresh the next time
-    checkMPU(); // checks the angle and control the rotation of screen.
     //Timer1.restart();
   }
   checkPage();

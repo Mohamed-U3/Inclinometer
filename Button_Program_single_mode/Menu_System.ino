@@ -9,36 +9,8 @@ void mainMenu() {
   interrupts();
 
   switch (menuNum) {
-    case 0:
-      checkButtonLeft();
-      checkButtonRight();
-      drawHeader(F("Mode Select"));
 
-      display.setCursor(5, 20);   //  Sets coursor position
-      display.print(F("Training"));  // set info
-      display.setCursor(80, 20);  //  Sets coursor position
-      display.println(F("Comp"));    // set info
-
-      if (leftchange || rightchange){//(digitalRead(buttonLeft) == 0 || digitalRead(buttonRight) == 0) {  // if the state has changed, change selection
-        mode = !mode;
-        leftchange = false;
-        rightchange = false;
-        delay(125);  // Delay a little bit to avoid bouncing
-      }
-
-      //Highlight Selection
-      if (mode == 0) {
-        display.drawLine(5, 30, 50, 30, WHITE);  // draw underline
-      } else {
-        display.drawLine(80, 30, 103, 30, WHITE);  // draw underline
-      }
-
-      display.display();
-      //checkPage();
-      //}
-      break;
-
-    case 1:  // Menu Page 1, LED control
+    case 0:  // Menu Page 1, LED control
       checkButtonLeft();
       checkButtonRight();
       drawHeader(F("LED Brightness"));
@@ -78,8 +50,8 @@ void mainMenu() {
       //}
       break;
 
-    case 2:  // Menu Page 2, mpu initialisation
-      drawHeader(F("MPU6050 test"));
+    case 1:  // Menu Page 2, mpu initialisation
+      drawHeader(F("Target Angle"));
       display.setCursor(5, 15);                 //  Sets coursor position
       display.print(F("Press button to"));
       display.setCursor(5, 23);  //  Sets coursor position
@@ -93,13 +65,13 @@ void mainMenu() {
         // Try to initialize!
         delay(125);
          // MPU 6050 code
-        drawHeader(F("MPU6050 test"));                 // set info
+        drawHeader(F("Target Angle"));                 // set info
         display.setCursor(5, 20); 
         if (!mpu.begin()) {
-          display.println(F("Error"));  // set info
+          display.println(F("Module Error"));  // set info
           display.display();
         } else {
-          display.print(F("MPU6050 Found!"));  // set info
+          display.print(F("Module Active!"));  // set info
           display.display();
           delay(1000);
 
@@ -114,7 +86,7 @@ void mainMenu() {
 
             //reset the LED brightness back to original setting
             analogWrite(ledPin, map(brightness, 0, maxBrightness, 0, 255));  //this code maps the max brightness constant to the max LED brightness
-            drawHeader(F("MPU6050 test"));
+            drawHeader(F("Target Angle"));
             display.setCursor(5, 20);                 //  Sets coursor position
             display.println(F("Draw Bow to Target"));    // set info
             display.display();
@@ -153,7 +125,7 @@ void mainMenu() {
               Serial.println(String(value));
               delay(5000);
 
-              drawHeader(F("MPU6050 test"));
+              drawHeader(F("Target Angle"));
               display.setCursor(5, 20);         //  Sets coursor position
               display.display();
 
@@ -185,36 +157,7 @@ void mainMenu() {
       }
       break;
 
-
-    /*case 3:  // Menu Page 3, power off selector
-      //// Page setup ////
-
-      //Default auto power off is off
-      if (digitalRead(buttonLeft) == 0 && autoPowerOffTime > 0) {
-        autoPowerOffTime = autoPowerOffTime - 30;
-        EEPROM.write(10, autoPowerOffTime); //write autoPowerOffTime to address 0
-        //power.setTimeout(autoPowerOffTime);
-      }
-      if (digitalRead(buttonRight) == 0 && autoPowerOffTime < 300) {  // limit timer to max of 5 minutes
-        autoPowerOffTime = autoPowerOffTime + 30;
-        EEPROM.write(10, autoPowerOffTime); //write autoPowerOffTime to address 0
-        //power.setTimeout(autoPowerOffTime);
-      }
-
-      drawHeader(F("Auto power off"));
-      display.setCursor(5, 20);
-      if(autoPowerOffTime == 0){                       //  Sets coursor position
-        display.println(F("Disabled"));
-      } else{
-        float i = float(autoPowerOffTime)/60;
-        display.print(i);
-        display.print(" Min");
-      }
-      display.display();                        // update display
-
-      break;
-    */
-    case 3:  // Menu Page 4, battery %
+    case 2:  // Menu Page 4, battery %
       percentage = FuelGauge.percent();  //update percentage variable
       drawHeader(F("Battery percentage:"));
       display.setCursor(5, 20);                 //  Sets coursor position
@@ -225,15 +168,6 @@ void mainMenu() {
       delay(150);
       break;
 
-    case 4:  // Menu Page 6, back to mode select
-      drawHeader(F("Back"));
-      display.setCursor(5, 15);                 //  Sets coursor position
-      display.print(F("Return to mode"));
-      display.setCursor(5, 23);  //  Sets coursor position
-      display.print(F("select"));
-      display.display();  // update display
-      delay(150);
-      break;
   }
 }
 
@@ -245,96 +179,31 @@ void checkPage() {
   checkButtonLeft();
   checkButtonRight();
 
-  // Constrains menuPageCounter between 1 and 6
-  /*if (upchange == true) {  // check for button up press
-    //Serial.println(menuPageCounter);
-    if (menuPageCounter != 0) {
-      menuPageCounter--;
-      upchange = false;
-      downchange = false;
-      centreChange = false;
-      leftchange = false;
-      rightchange = false;
-      if (menuPageCounter < 1) {  // if page number goes lower than 0
-        menuPageCounter = 4;      // reset to 4
-      }
-      if (menuPageCounter == 2 && mode) {
-        menuPageCounter = 1;
-        upchange = false;
-        downchange = false;
-        centreChange = false;
-        leftchange = false;
-        rightchange = false;
-      }
-      flag = 1;
-      //breakMenuLoop = true;
-    }
-  } else if (downchange == true) {  // check for down button press
-    //Serial.println(menuPageCounter);
-    if (menuPageCounter != 0) {
-      menuPageCounter++;
-      upchange = false;
-      downchange = false;
-      centreChange = false;
-      leftchange = false;
-      rightchange = false;
-      if (menuPageCounter >= 5) {  // if page number goes over 5
-        menuPageCounter = 1;       // reset to 0
-      }
-      if (menuPageCounter == 2 && mode) {
-        upchange = false;
-        downchange = false;
-        centreChange = false;
-        leftchange = false;
-        rightchange = false;
-        menuPageCounter = 3;
-        //Serial.println("Skipping 2");
-      }
-      //breakMenuLoop = true;
-      flag = 1;  //force to start the void loop;
-    }
-  } else */ if (centreChange == true) {  // check for centre button press
-    //Serial.println(menuPageCounter);
+ if (centreChange == true) {  // check for centre button press
     if (menuPageCounter == 0) {  // check if we are on the mode select screen
-      //upchange = false;
-      //downchange = false;
       centreChange = false;
       leftchange = false;
       rightchange = false;
       menuPageCounter = 1;
-      //breakMenuLoop = true;
       flag = 1;
-    } else if (menuPageCounter == 4) {  // check if we are on the back to mode select screen
-      //upchange = false;
-      //downchange = false;
-      centreChange = false;
-      leftchange = false;
-      rightchange = false;
-      menuPageCounter = 0;
-      flag = 1;
-    }
+    } 
     else{
-      // Coppied from down button
+      // Copied from down button
       if (menuPageCounter != 0) {
       menuPageCounter++;
-      //upchange = false;
-      //downchange = false;
       centreChange = false;
       leftchange = false;
       rightchange = false;
-      if (menuPageCounter >= 5) {  // if page number goes over 5
-        menuPageCounter = 1;       // reset to 0
+      if (menuPageCounter >= 3) {  // if page number goes over 5
+        menuPageCounter = 0;       // reset to 0
       }
       if (menuPageCounter == 2 && mode) {
-        //upchange = false;
-        //downchange = false;
         centreChange = false;
         leftchange = false;
         rightchange = false;
-        menuPageCounter = 3;
-        //Serial.println("Skipping 2");
+        menuPageCounter = 2;
       }
-      // end of coppied from down
+      // end of copied from down
       flag = 1;
     }
     }
