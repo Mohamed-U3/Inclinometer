@@ -37,6 +37,7 @@ Project Backups/
 
 # Compressed Files
 *.zip
+*.rar
 
 # non needed Folders
 3_Button_Main/

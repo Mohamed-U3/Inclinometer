@@ -81,7 +81,8 @@ void setupScreens() {
   delay(1000);
 }
 
-void drawHeader(String text) {
+void drawHeader(String text)
+{
   display.clearDisplay();  //  Clears display
   display.setTextSize(1);  // set text size
   display.setTextColor(WHITE);

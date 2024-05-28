@@ -21,15 +21,19 @@
   }
 }*/
 
-bool checkButtonCentre() {
+bool checkButtonCentre()
+{
   //    Check button Centre Button)
   //  ==================
   //centreChange = false;
   buttonCentre_state = digitalRead(buttonCentre);
   // compare the buttonState to its previous state
-  if (buttonCentre_state != buttonCentre_lastState) {
-    if (buttonCentre_state == HIGH) {  // if the state has changed, increment the counter
-      if (millis() > debounceDelay + debounceTimer){
+  if (buttonCentre_state != buttonCentre_lastState)
+  {
+    if (buttonCentre_state == HIGH)
+    {  // if the state has changed, increment the counter
+      if (millis() > debounceDelay + debounceTimer)
+      {
         centreChange = true;
         lastInteractionTime = millis();
       }
@@ -60,11 +64,12 @@ void checkButtonUp() {
   }
 }*/
 
-void checkButtonLeft() {
+void checkButtonLeft()
+{
   //    Check button Left Button)
   //  ==================
   //leftchange = false;
-    if(GlobalUpsideDownFlag == true)
+  if(GlobalUpsideDownFlag == true)
   {
     buttonLeft_state = digitalRead(buttonRight);
   }
@@ -73,9 +78,12 @@ void checkButtonLeft() {
     buttonLeft_state = digitalRead(buttonLeft);
   }
   // compare the buttonState to its previous state
-  if (buttonLeft_state != buttonLeft_lastState) {
-    if (buttonLeft_state == LOW) {  // if the state has changed, increment the counter
-      if (millis() > debounceDelay + debounceTimer){
+  if (buttonLeft_state != buttonLeft_lastState)
+  {
+    if (buttonLeft_state == LOW)
+    {  // if the state has changed, increment the counter
+      if (millis() > debounceDelay + debounceTimer)
+      {
         leftchange = true;
         lastInteractionTime = millis();
       }
@@ -86,7 +94,8 @@ void checkButtonLeft() {
   }
 }
 
-void checkButtonRight() {
+void checkButtonRight()
+{
   //    Check button Right Button)
   //  ==================
   //rightchange = false;
@@ -99,9 +108,12 @@ void checkButtonRight() {
     buttonRight_state = digitalRead(buttonRight);
   }
   // compare the buttonState to its previous state
-  if (buttonRight_state != buttonRight_lastState) {
-    if (buttonRight_state == LOW) {  // if the state has changed, increment the counter
-      if (millis() > debounceDelay + debounceTimer){
+  if (buttonRight_state != buttonRight_lastState)
+  {
+    if (buttonRight_state == LOW)
+    {  // if the state has changed, increment the counter
+      if (millis() > debounceDelay + debounceTimer)
+      {
         rightchange = true;
         lastInteractionTime = millis();
       }

@@ -134,7 +134,8 @@ bool centreChange, looping, leftchange, rightchange; // upchange, downchange,
 // Note: last parameter is optional (defaults to 2 seconds if omitted)
 //AutoPower power(powerPin, buttonCentre, 2);   // Hold button 2 seconds to power off
 
-void setup() {
+void setup()
+{
   pinMode(powerPin, "OUTPUT");
   digitalWrite(powerPin, 1);
   // Start serial comms
@@ -175,16 +176,14 @@ void setup() {
 
 void loop() 
 {
-  checkMPU();         // checks the angle and control the rotation of screen and buttons.
   if (flag == 1)//checks if flag == 1 from the checkPage func
   {
-    checkMPU();       // checks the angle and control the rotation of screen and buttons.
     //Timer1.stop();  //stop the interrupt
     mainMenu();     //goes to menu 1, change brightness first
     flag = 0;       //so flag works fresh the next time
     //Timer1.restart();
   }
   checkPage();
-  autoPowerOff();
+//  autoPowerOff();
   //power.updatePower();                // Call if setTimeout() used
 }  // End of Loop
