@@ -185,6 +185,6 @@ void loop()
   }
   checkPage();
   flag = 1;
-//  autoPowerOff();
+  autoPowerOff();
   //power.updatePower();                // Call if setTimeout() used
 }  // End of Loop

@@ -82,7 +82,99 @@ void mainMenu()
       delay(150);
       break;
 
-    
+    case 3:  // Menu Page 2, mpu initialisation
+      drawHeader(F("Target Angle"));
+      display.setCursor(5, 15);                 //  Sets coursor position
+      display.print(F("Press button to"));
+      display.setCursor(5, 23);                 //  Sets coursor position
+      display.print(F("start"));
+      display.display();
+      checkButtonLeft();
+      checkButtonRight();
+      if (leftchange || rightchange)
+      {
+        leftchange = false;
+        rightchange = false;
+        // Try to initialize!
+        Delay_with_ScreenRotation(125);
+        // MPU 6050 code
+        drawHeader(F("Target Angle"));          // set info
+        display.setCursor(5, 20);
+        if (!mpu.begin())
+        {
+          display.println(F("Module Error"));  // set info
+          display.display();
+        }
+        else
+        {
+          display.print(F("Module Active!"));  // set info
+          display.display();
+          Delay_with_ScreenRotation(1000);
+
+          looping = true;
+          while (looping)
+          {
+            flashcount = 0;
+            //flash the screen twice
+            while (flashcount < 2)
+            {
+              flashLED();
+              flashcount++;
+            }
+
+            //reset the LED brightness back to original setting
+            analogWrite(ledPin, map(brightness, 0, maxBrightness, 0, 255));  //this code maps the max brightness constant to the max LED brightness
+            drawHeader(F("Target Angle"));
+            display.setCursor(5, 20);                 //  Sets coursor position
+            display.println(F("Draw Bow to Target"));    // set info
+            display.display();
+            Delay_with_ScreenRotation(1000);
+
+            //start 10 second counter to set angle
+            startt = millis();
+            endt = 0;
+            duration = 10000;  //10000 ms = 10 seconds
+            int value = 0;
+            while ((endt - startt) <= duration)
+            {
+              value = MPU_Angle();
+              
+              Serial.println(String(value));
+              Delay_with_ScreenRotation(1000);
+
+              drawHeader(F("Target Angle"));
+              display.setCursor(5, 20);         //  Sets coursor position
+              display.display();
+
+              Delay_with_ScreenRotation(250);  //controls text change speed
+
+              endt = millis();
+            }
+
+            //flashScreen();
+            flashLED();  //flash the LED
+
+            //reset brightness of LED
+            analogWrite(ledPin, map(brightness, 0, maxBrightness, 0, 255));  //this code maps the max brightness constant to the max LED brightness
+            EEPROM.write(0, brightness);                                     //write counter to address 0
+
+            Delay_with_ScreenRotation(125);
+            drawHeader(F("Target Angle"));
+            display.setCursor(5, 20);                       //  Sets coursor position
+            display.print(F("Angle: "));
+            display.print(String(value));  // set info
+            display.print(" ");  // set info
+            display.println((char)247);  // set info
+            display.display();
+            Delay_with_ScreenRotation(3500);
+
+            //if(!checkButtonCentre()){ //returns true if changed
+            looping = false;
+            //} //else centre button has been pushed, so reset and repeat the process
+          }
+        }
+      }
+      break;
 
   }
 }
@@ -147,32 +239,14 @@ void checkM()
   }
   else
   {
-    //    flashcount = 0;
-    //    //flash the screen twice
-    //    while (flashcount < 2)
-    //    {
-    //      flashLED();
-    //      flashcount++;
-    //    }
-    //
-    //    //reset the LED brightness back to original setting
-    //    analogWrite(ledPin, map(brightness, 0, maxBrightness, 0, 255));  //this code maps the max brightness constant to the max LED brightness
-    //
-    //    //flashScreen();
-    //    flashLED();  //flash the LED
-    //
-    //    //reset brightness of LED
-    //    analogWrite(ledPin, map(brightness, 0, maxBrightness, 0, 255));  //this code maps the max brightness constant to the max LED brightness
-    //    EEPROM.write(0, brightness);                                     //write counter to address 0
-    //
-    //    delay(125);
     int val = MPU_Angle();
     drawHeader(F("Real Time Angle"));
-    display.setCursor(5, 20);                       //  Sets coursor position
+    display.setCursor(5, 20);    //  Sets coursor position
     display.print(F("Target Angle: "));
-    display.print(String(val));  // set info
+    display.print(String(val));  // Display Degree Value
+    display.print(" ");
+    display.println((char)247);  // display degree symbol
     display.display();
-    //    delay(2000);
   }
 }
 
@@ -211,9 +285,12 @@ int MPU_Angle()
     float corrected_angle = value - 180;
 
     // Normalize the angle to be within 0 to 360 degrees
-    if (corrected_angle < 0) {
+    if (corrected_angle < 0)
+    {
       corrected_angle += 360;
-    } else if (corrected_angle >= 360) {
+    }
+    else if (corrected_angle >= 360)
+    {
       corrected_angle -= 360;
     }
     value = corrected_angle;
@@ -260,4 +337,13 @@ int MPU_Angle()
   }
 
   return value;
+}
+
+void Delay_with_ScreenRotation(double duration_MS)
+{
+  double Function_start = millis();
+  while ((millis() - Function_start) <= duration_MS)
+  {
+    MPU_Angle();
+  }
 }
