@@ -90,6 +90,14 @@ void drawHeader(String text)
   display.println(text);        // set info
   display.drawLine(5, 10, 128, 10, WHITE);  // draw underline
 }
+
+void drawASArchery()
+{
+  display.clearDisplay();                               //for Clearing the display
+  display.drawBitmap(5, 0, ASArchery, 128, 32, WHITE);  // display.drawBitmap(x position, y position, bitmap data, bitmap width, bitmap height, color)
+  display.display();
+}
+
 /*
 void screenText(String text) {
   display.clearDisplay();  //  Clears display

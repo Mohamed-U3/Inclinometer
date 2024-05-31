@@ -184,6 +184,7 @@ void loop()
     //Timer1.restart();
   }
   checkPage();
+  flag = 1;
 //  autoPowerOff();
   //power.updatePower();                // Call if setTimeout() used
 }  // End of Loop
