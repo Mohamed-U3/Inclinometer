@@ -91,6 +91,7 @@ void mainMenu()
       display.display();
       checkButtonLeft();
       checkButtonRight();
+      MPU_Angle();
       if (leftchange || rightchange)
       {
         leftchange = false;
